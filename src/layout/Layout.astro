@@ -1,0 +1,104 @@
+---
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://graminx.com",
+).toString();
+---
+
+<!doctype html>
+<html lang="en" class="antialiased scroll-smooth">
+  <head>
+    <title>{title}</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Graminx" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=5.0"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <meta name="theme-color" content="#13251F" />
+
+    <!-- Open Graph (OG) Meta Tags -->
+    <meta property="og:locale" content="en" />
+    <meta property="og:site_name" content="Graminx" />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image:alt" content="Logo of Graminx" />
+    <!-- Minimum 1200x630 px -->
+    <meta property="og:image" content="https://graminx.com/logo.png" />
+    <meta property="og:url" content="https://graminx.com" />
+    <meta property="og:description" content={description} />
+
+    <!-- Twitter Card Meta Tag -->
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- <meta name="twitter:site" content="@officialgraminx" /> -->
+    <!-- <meta name="twitter:creator" content="@officialgraminx" /> -->
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <!--  Minimum 1024x512 px -->
+    <meta name="twitter:image" content="https://graminx.com/logo.png" />
+
+    <!-- Apple Meta Tags -->
+    <meta name="apple-mobile-web-app-title" content="Graminx" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="canonical" href={canonicalURL} />
+  </head>
+
+  <body class="font-sans text-primary bg-secondary">
+    <Header />
+    <slot />
+  </body>
+</html>
+
+<script>
+  const preventZoom = (e: {
+    ctrlKey: any;
+    metaKey: any;
+    preventDefault: () => void;
+  }) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+    }
+  };
+
+  document.addEventListener("wheel", preventZoom, { passive: false });
+  document.addEventListener("keydown", function (e) {
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      (e.key === "+" || e.key === "-" || e.key === "=")
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener("gesturestart", (e) => e.preventDefault(), {
+    passive: false,
+  });
+  document.addEventListener("gesturechange", (e) => e.preventDefault(), {
+    passive: false,
+  });
+  document.addEventListener("gestureend", (e) => e.preventDefault(), {
+    passive: false,
+  });
+</script>

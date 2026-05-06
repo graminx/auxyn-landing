@@ -1,0 +1,145 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<form
+  data-waitlist-form
+  novalidate
+  class:list={["flex w-full max-w-md flex-col gap-2", className]}
+>
+  <div class="flex flex-col gap-2 sm:flex-row">
+    <input
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      aria-label="Email address"
+      aria-describedby="waitlist-error"
+      data-waitlist-input
+      class="flex-1 w-100 rounded-lg border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 aria-[invalid=true]:border-red-500 aria-[invalid=true]:focus:ring-red-500/20"
+    />
+    <button
+      type="submit"
+      data-waitlist-submit
+      class="rounded-lg bg-gray-900 px-5 py-2 text-base font-medium text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900/30 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      Join waitlist
+    </button>
+  </div>
+  <input
+    type="text"
+    name="website"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+    data-waitlist-honeypot
+    class="hidden"
+  />
+  <p
+    id="waitlist-error"
+    data-waitlist-error
+    role="alert"
+    class="hidden text-sm text-red-600"
+  >
+  </p>
+  <p
+    data-waitlist-success
+    role="status"
+    class="hidden text-sm text-green-600"
+  >
+    Thanks! You're on the list.
+  </p>
+</form>
+
+<script>
+  import { z } from "zod";
+
+  const schema = z.object({
+    email: z
+      .string()
+      .trim()
+      .min(1, "Email is required")
+      .pipe(z.email("Enter a valid email address")),
+  });
+
+  const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT;
+
+  document.querySelectorAll<HTMLFormElement>("[data-waitlist-form]").forEach((form) => {
+    const input = form.querySelector<HTMLInputElement>("[data-waitlist-input]");
+    const submit = form.querySelector<HTMLButtonElement>("[data-waitlist-submit]");
+    const errorEl = form.querySelector<HTMLParagraphElement>("[data-waitlist-error]");
+    const successEl = form.querySelector<HTMLParagraphElement>("[data-waitlist-success]");
+    const honeypot = form.querySelector<HTMLInputElement>("[data-waitlist-honeypot]");
+    if (!input || !submit || !errorEl || !successEl) return;
+
+    const showError = (msg: string | null) => {
+      if (msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.remove("hidden");
+        input.setAttribute("aria-invalid", "true");
+      } else {
+        errorEl.textContent = "";
+        errorEl.classList.add("hidden");
+        input.removeAttribute("aria-invalid");
+      }
+    };
+
+    const showSuccess = (visible: boolean) => {
+      successEl.classList.toggle("hidden", !visible);
+    };
+
+    input.addEventListener("input", () => {
+      if (input.getAttribute("aria-invalid") === "true") showError(null);
+      showSuccess(false);
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      showSuccess(false);
+
+      if (honeypot && honeypot.value) {
+        showSuccess(true);
+        form.reset();
+        return;
+      }
+
+      const result = schema.safeParse({ email: input.value });
+      if (!result.success) {
+        showError(result.error.issues[0]?.message ?? "Invalid email");
+        input.focus();
+        return;
+      }
+
+      if (!endpoint) {
+        showError("Waitlist endpoint is not configured");
+        return;
+      }
+
+      showError(null);
+      submit.disabled = true;
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            email: result.data.email,
+            userAgent: navigator.userAgent,
+            referrer: document.referrer,
+          }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        showSuccess(true);
+        form.reset();
+      } catch {
+        showError("Something went wrong, try again");
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  });
+</script>

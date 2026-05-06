@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "InclusiveSans";
+  src: url("/fonts/InclusiveSans-VariableFont_wght.woff2") format("woff2");
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "InclusiveSans", sans-serif;
+
+  --color-primary: #13251f;
+  --color-secondary: #f5f1eb;
+  --color-accent: #fead0b;
+}
+
+html {
+  scrollbar-width: none;
+}
