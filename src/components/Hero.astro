@@ -2,11 +2,30 @@
 import WaitlistForm from "./WaitlistForm.astro";
 ---
 
-<section class="p-4 flex justify-center items-center">
-  <div class="rounded-2xl flex justify-center flex-col items-center pt-40">
-    <p
-      class="text-2xl text-gray-600 md:max-w-4xl leading-[140%] text-center"
-    >
+<section
+  class="relative min-h-screen p-4 flex justify-center items-center overflow-hidden"
+>
+  <video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    class="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+  >
+    <source src="/video.mp4" type="video/mp4" />
+  </video>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 z-10 bg-black/60"
+  >
+  </div>
+  <div
+    class="relative z-20 rounded-2xl flex justify-center flex-col items-center pt-32"
+  >
+    
+
+    <p class="text-2xl md:text-3xl text-white md:max-w-4xl leading-[140%] text-center">
       A unified dashboard for weather, cropping patterns, pest history, ESG
       compliance and pesticide residue limits, built for agri-businesses,
       exporters and supply chain teams who can't afford to guess.
