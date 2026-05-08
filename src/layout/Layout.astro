@@ -10,7 +10,7 @@ interface Props {
 const { title, description } = Astro.props;
 const canonicalURL = new URL(
   Astro.url.pathname,
-  Astro.site || "https://graminx.com",
+  Astro.site || "https://auxyn.in",
 ).toString();
 ---
 
@@ -20,7 +20,7 @@ const canonicalURL = new URL(
     <title>{title}</title>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="author" content="Graminx" />
+    <meta name="author" content="Auxyn" />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1.0,maximum-scale=5.0"
@@ -31,27 +31,27 @@ const canonicalURL = new URL(
 
     <!-- Open Graph (OG) Meta Tags -->
     <meta property="og:locale" content="en" />
-    <meta property="og:site_name" content="Graminx" />
+    <meta property="og:site_name" content="Auxyn" />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
-    <meta property="og:image:alt" content="Logo of Graminx" />
+    <meta property="og:image:alt" content="Logo of Auxyn" />
     <!-- Minimum 1200x630 px -->
-    <meta property="og:image" content="https://graminx.com/logo.png" />
-    <meta property="og:url" content="https://graminx.com" />
+    <meta property="og:image" content="https://auxyn.in/logo.png" />
+    <meta property="og:url" content="https://auxyn.in" />
     <meta property="og:description" content={description} />
 
     <!-- Twitter Card Meta Tag -->
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- <meta name="twitter:site" content="@officialgraminx" /> -->
-    <!-- <meta name="twitter:creator" content="@officialgraminx" /> -->
+    <!-- <meta name="twitter:site" content="@officialAuxyn" /> -->
+    <!-- <meta name="twitter:creator" content="@officialAuxyn" /> -->
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <!--  Minimum 1024x512 px -->
-    <meta name="twitter:image" content="https://graminx.com/logo.png" />
+    <meta name="twitter:image" content="https://auxyn.in/logo.png" />
 
     <!-- Apple Meta Tags -->
-    <meta name="apple-mobile-web-app-title" content="Graminx" />
+    <meta name="apple-mobile-web-app-title" content="Auxyn" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
